@@ -26,6 +26,12 @@ void main() {
   });
 
   test('Should call HttpClient with correct values', () async {
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenAnswer((_) async => {
+          'accessToken': faker.guid.guid(), 'name': faker.person.name()
+        });
     await sut.auth(params);
     verify(() => httpClient.request(
           url: url,
@@ -68,5 +74,17 @@ void main() {
         body: any(named: 'body'))).thenThrow(HttpError.serverError);
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should returns an Account if HttpClient returns 200', () async {
+    final accessToken = faker.guid.guid();
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenAnswer((_) async => {
+          'accessToken': accessToken, 'name': faker.person.name()
+        });
+    final account = await sut.auth(params);
+    expect(account.token, equals(accessToken));
   });
 }
