@@ -22,6 +22,16 @@ class ClientSpy extends Mock implements Client {}
 
 void main() {
   late String url;
+  late ClientSpy client;
+  late HttpAdapter sut;
+  late Map<String, String> headers;
+
+  setUp(() {
+    client = ClientSpy();
+    sut = HttpAdapter(client);
+    headers = {'content-type': 'application/json', 'accept': 'application/json'};
+  });
+
   setUpAll(() {
     url = faker.internet.httpUrl();
     registerFallbackValue(Uri.parse(url));
@@ -29,15 +39,10 @@ void main() {
 
   group('POST', () {
     test('Should call post with correct values', () async {
-      final client = ClientSpy();
-      final sut = HttpAdapter(client);
       when(() => client.post(any(), headers: any(named: 'headers')))
           .thenAnswer((_) async => Response('{}', 200));
       await sut.request(url: url, method: 'post');
-      verify(() => client.post(Uri.parse(url), headers: {
-            'content-type': 'application/json',
-            'accept': 'application/json',
-          }));
+      verify(() => client.post(Uri.parse(url), headers: headers));
     });
   });
 }
