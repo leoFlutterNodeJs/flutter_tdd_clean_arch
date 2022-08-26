@@ -16,4 +16,11 @@ void main() {
     final passwordTextChildren = find.descendant(of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
     expect(passwordTextChildren, findsOneWidget);
   });
+
+  testWidgets('Should load with disabled Button', (WidgetTester tester) async {
+    const loginPage = MaterialApp(home: LoginPage());
+    await tester.pumpWidget(loginPage);
+    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, null);
+  });
 }

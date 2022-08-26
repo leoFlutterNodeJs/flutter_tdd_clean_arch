@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: null,
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).primaryColor,
                       shape: RoundedRectangleBorder(
