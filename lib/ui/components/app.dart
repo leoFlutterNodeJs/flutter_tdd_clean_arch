@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../ui/components/components.dart';
-import '../pages/login_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -46,7 +45,7 @@ class App extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         )
       ),
-      home: const LoginPage(),
+      home: Container(),
     );
   }
 }
