@@ -14,6 +14,7 @@ void main() {
 
   late LoginPresenter presenter;
   late StreamController<String?> emailErrorController;
+  late StreamController<String?> mainErrorController;
   late StreamController<String?> passwordErrorController;
   late StreamController<bool> isFormValidController;
   late StreamController<bool> isLoadingController;
@@ -21,10 +22,12 @@ void main() {
   Future<void> loadPage(WidgetTester tester) async {
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String?>();
+    mainErrorController = StreamController<String?>();
     passwordErrorController = StreamController<String?>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
     when(() => presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
+    when(() => presenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
     when(() => presenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
     when(() => presenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
     when(() => presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
@@ -34,6 +37,7 @@ void main() {
 
   tearDown((){
     emailErrorController.close();
+    mainErrorController.close();
     passwordErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
@@ -155,5 +159,12 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Should present error message if authentication fails', (WidgetTester tester) async {
+    await loadPage(tester);
+    mainErrorController.add('main error');
+    await tester.pump();
+    expect(find.text('main error'), findsOneWidget);
   });
 }
