@@ -17,37 +17,14 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
     widget.presenter.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
         builder: (context) {
           widget.presenter.isLoadingStream.listen((isLoading) {
-            if (isLoading) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) => SimpleDialog(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 20),
-                        Text(
-                          'Aguarde!',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
-            }
+            isLoading ? showLoading(context) : hideLoading(context);
           });
           widget.presenter.mainErrorStream.listen((error) {
             if (error != null) {
@@ -119,8 +96,9 @@ class _LoginPageState extends State<LoginPage> {
                           stream: widget.presenter.isFormValidStream,
                           builder: (context, snapshot) {
                             return ElevatedButton(
-                              onPressed:
-                                  snapshot.data == true ? widget.presenter.auth : null,
+                              onPressed: snapshot.data == true
+                                  ? widget.presenter.auth
+                                  : null,
                               style: ElevatedButton.styleFrom(
                                   primary: Theme.of(context).primaryColor,
                                   shape: RoundedRectangleBorder(
