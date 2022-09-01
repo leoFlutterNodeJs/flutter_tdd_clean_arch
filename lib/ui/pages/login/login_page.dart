@@ -10,78 +10,113 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const LoginHeader(),
-            const HeadLine1(text: 'Login'),
-            Padding(
-              padding: const EdgeInsets.all(32),
-              child: Form(
-                  child: Column(
-                children: [
-                  StreamBuilder<String?>(
-                    stream: presenter.emailErrorStream,
-                    builder: (context, snapshot) {
-                      return TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                          icon: Icon(Icons.email, color: Theme.of(context).primaryColor,),
-                          errorText: snapshot.data?.isEmpty == true ? null : snapshot.data
+      body: Builder(
+        builder: (context) {
+          presenter.isLoadingStream.listen((isLoading) {
+            if (isLoading) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => SimpleDialog(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text(
+                          'Aguarde!',
+                          textAlign: TextAlign.center,
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: presenter.validateEmail,
-                      );
-                    }
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 32),
-                    child: StreamBuilder<String?>(
-                      stream: presenter.passwordErrorStream,
-                      builder: (context, snapshot) {
-                        return TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            labelStyle: TextStyle(color: Theme.of(context).primaryColor),
-                            icon: Icon(Icons.lock, color: Theme.of(context).primaryColor,),
-                            errorText: snapshot.data?.isEmpty == true ? null : snapshot.data
-                          ),
-                          obscureText: true,
-                          onChanged: presenter.validatePassword,
-                        );
-                      }
+                      ],
                     ),
-                  ),
-                  StreamBuilder<bool>(
-                    stream: presenter.isFormValidStream,
-                    builder: (context, snapshot) {
-                      return ElevatedButton(
-                        onPressed: snapshot.data == true ? presenter.auth : null,
-                        style: ElevatedButton.styleFrom(
+                  ],
+                ),
+              );
+            }
+          });
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const LoginHeader(),
+                const HeadLine1(text: 'Login'),
+                Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Form(
+                      child: Column(
+                    children: [
+                      StreamBuilder<String?>(
+                          stream: presenter.emailErrorStream,
+                          builder: (context, snapshot) {
+                            return TextFormField(
+                              decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  labelStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor),
+                                  icon: Icon(
+                                    Icons.email,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  errorText: snapshot.data?.isEmpty == true
+                                      ? null
+                                      : snapshot.data),
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged: presenter.validateEmail,
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8, bottom: 32),
+                        child: StreamBuilder<String?>(
+                            stream: presenter.passwordErrorStream,
+                            builder: (context, snapshot) {
+                              return TextFormField(
+                                decoration: InputDecoration(
+                                    labelText: 'Senha',
+                                    labelStyle: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                    icon: Icon(
+                                      Icons.lock,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    errorText: snapshot.data?.isEmpty == true
+                                        ? null
+                                        : snapshot.data),
+                                obscureText: true,
+                                onChanged: presenter.validatePassword,
+                              );
+                            }),
+                      ),
+                      StreamBuilder<bool>(
+                          stream: presenter.isFormValidStream,
+                          builder: (context, snapshot) {
+                            return ElevatedButton(
+                              onPressed:
+                                  snapshot.data == true ? presenter.auth : null,
+                              style: ElevatedButton.styleFrom(
+                                  primary: Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  )),
+                              child: Text('Entrar'.toUpperCase()),
+                            );
+                          }),
+                      TextButton.icon(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          )
                         ),
-                        child: Text('Entrar'.toUpperCase()),
-                      );
-                    }
-                  ),
-                  TextButton.icon(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
-                    ),
-                    icon: const Icon(Icons.person),
-                    label: const Text('Criar conta'),
-                  ),
-                ],
-              )),
-            )
-          ],
-        ),
+                        icon: const Icon(Icons.person),
+                        label: const Text('Criar conta'),
+                      ),
+                    ],
+                  )),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
