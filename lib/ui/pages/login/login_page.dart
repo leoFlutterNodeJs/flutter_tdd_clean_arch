@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                     stream: presenter.isFormValidStream,
                     builder: (context, snapshot) {
                       return ElevatedButton(
-                        onPressed: snapshot.data == true ? (){} : null,
+                        onPressed: snapshot.data == true ? presenter.auth : null,
                         style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
