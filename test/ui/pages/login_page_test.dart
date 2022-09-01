@@ -43,6 +43,7 @@ void main() {
     await loadPage(tester);
     final emailTextChildren = find.descendant(of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
     expect(emailTextChildren, findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
    testWidgets('Should load with correct password initial state', (WidgetTester tester) async {
@@ -143,5 +144,16 @@ void main() {
     isLoadingController.add(true);
     await tester.pump();
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  });
+
+  testWidgets('Should hide present loading', (WidgetTester tester) async {
+    await loadPage(tester);
+    isLoadingController.add(true);
+    await tester.pump();
+
+    isLoadingController.add(false);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 }
