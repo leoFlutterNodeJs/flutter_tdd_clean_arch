@@ -47,6 +47,10 @@ class StreamLoginPresenter {
     _state.isLoading = false;
     _update();
   }
+
+  void dispose() {
+    _controller.close();
+  }
 }
 
 class LoginState {
