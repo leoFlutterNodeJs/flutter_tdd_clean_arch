@@ -42,4 +42,12 @@ void main() {
     sut.validationEmail(email);
     sut.validationEmail(email);
   });
+
+  test('Should emits null if validation is succeeds only email', () {
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    sut.validationEmail(email);
+    sut.validationEmail(email);
+  });
 }
