@@ -8,8 +8,8 @@ class StreamLoginPresenter {
 
   final _state = LoginState();
 
-  Stream<String?> get emailErrorStream =>
-      _controller.stream.map((state) => state.emailError).distinct();
+  Stream<String?> get emailErrorStream => _controller.stream.map((state) => state.emailError).distinct();
+  Stream<bool> get isFormValidStream => _controller.stream.map((state) => state.isFormValidStream).distinct();
 
   StreamLoginPresenter({required this.validation});
 
@@ -20,5 +20,6 @@ class StreamLoginPresenter {
 }
 
 class LoginState {
-  late String? emailError;
+  String? emailError;
+  bool get isFormValidStream => false;
 }
