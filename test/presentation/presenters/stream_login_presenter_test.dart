@@ -1,10 +1,10 @@
-import 'package:tdd_clean_arch/domain/entities/account_entity.dart';
-import 'package:tdd_clean_arch/domain/helpers/helpers.dart';
 import 'package:test/test.dart';
 
 import 'package:faker/faker.dart';
 import 'package:mocktail/mocktail.dart';
 
+import 'package:tdd_clean_arch/domain/entities/account_entity.dart';
+import 'package:tdd_clean_arch/domain/helpers/helpers.dart';
 import 'package:tdd_clean_arch/domain/usecases/usecases.dart';
 
 import 'package:tdd_clean_arch/presentation/presenters/presenters.dart';
@@ -175,6 +175,17 @@ void main() {
 
     expectLater(sut.isLoadingStream, emits(false));
     sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+
+    await sut.auth();
+  });
+
+  test('Should emit correct events on UnexpectedError', () async {
+    mockAuthenticationError(DomainError.unexpected);
+    sut.validationEmail(email);
+    sut.validationPassword(password);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Algo errado aconteceu. Tente novamente em breve!')));
 
     await sut.auth();
   });
