@@ -1,4 +1,4 @@
-export './app.dart';
+export './app_theme.dart';
 export './custom_colors.dart';
 export './error_message.dart';
 export './headline_1.dart';

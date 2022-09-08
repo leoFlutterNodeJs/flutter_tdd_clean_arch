@@ -68,7 +68,7 @@ void main() {
   });
 
   test('Should call Validation with correct email', () {
-    sut.validationEmail(email);
+    sut.validateEmail(email);
 
     verify(() => validation.validate(field: 'email', value: email)).called(1);
   });
@@ -81,8 +81,8 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validationEmail(email);
-    sut.validationEmail(email);
+    sut.validateEmail(email);
+    sut.validateEmail(email);
   });
 
   test('Should emits null if validation is succeeds only email', () {
@@ -90,12 +90,12 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validationEmail(email);
-    sut.validationEmail(email);
+    sut.validateEmail(email);
+    sut.validateEmail(email);
   });
 
   test('Should call Validation with correct password', () {
-    sut.validationPassword(password);
+    sut.validatePassword(password);
 
     verify(() => validation.validate(field: 'password', value: password))
         .called(1);
@@ -109,8 +109,8 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validationPassword(password);
-    sut.validationPassword(password);
+    sut.validatePassword(password);
+    sut.validatePassword(password);
   });
 
   test('Should emits null if validation is succeeds only password', () {
@@ -119,8 +119,8 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validationPassword(password);
-    sut.validationPassword(password);
+    sut.validatePassword(password);
+    sut.validatePassword(password);
   });
 
   test('Should emits email error if email is invalid', () {
@@ -133,8 +133,8 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
-    sut.validationEmail(email);
-    sut.validationPassword(password);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
   });
 
   test('Should emits isFormValidStream if all fields is valid', () async {
@@ -144,14 +144,14 @@ void main() {
 
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
-    sut.validationEmail(email);
+    sut.validateEmail(email);
     await Future.delayed(Duration.zero);
-    sut.validationPassword(password);
+    sut.validatePassword(password);
   });
 
   test('Should call Authentication with correct values', () async {
-    sut.validationEmail(email);
-    sut.validationPassword(password);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
     await sut.auth();
 
@@ -160,8 +160,8 @@ void main() {
   });
 
   test('Should emit correct events on Authentication success', () async {
-    sut.validationEmail(email);
-    sut.validationPassword(password);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
@@ -170,8 +170,8 @@ void main() {
 
   test('Should emit correct events on InvalidCredentialsError', () async {
     mockAuthenticationError(DomainError.invalidCredentials);
-    sut.validationEmail(email);
-    sut.validationPassword(password);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
     expectLater(sut.isLoadingStream, emits(false));
     sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
@@ -181,8 +181,8 @@ void main() {
 
   test('Should emit correct events on UnexpectedError', () async {
     mockAuthenticationError(DomainError.unexpected);
-    sut.validationEmail(email);
-    sut.validationPassword(password);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
 
     expectLater(sut.isLoadingStream, emits(false));
     sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Algo errado aconteceu. Tente novamente em breve!')));
