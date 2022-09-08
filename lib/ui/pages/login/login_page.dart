@@ -15,6 +15,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  void _hideKeyboard() {
+    final currentFocus = FocusScope.of(context);
+    if(!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -35,38 +43,41 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const LoginHeader(),
-                const HeadLine1(text: 'Login'),
-                Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Provider(
-                    create: (_) => widget.presenter,
-                    child: Form(
-                        child: Column(
-                      children: [
-                        const EmailInput(),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8, bottom: 32),
-                          child: PasswordInput(),
-                        ),
-                        const LoginButton(),
-                        TextButton.icon(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(
-                            primary: Theme.of(context).primaryColor,
+          return GestureDetector(
+            onTap: _hideKeyboard,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const LoginHeader(),
+                  const HeadLine1(text: 'Login'),
+                  Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Provider(
+                      create: (_) => widget.presenter,
+                      child: Form(
+                          child: Column(
+                        children: [
+                          const EmailInput(),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8, bottom: 32),
+                            child: PasswordInput(),
                           ),
-                          icon: const Icon(Icons.person),
-                          label: const Text('Criar conta'),
-                        ),
-                      ],
-                    )),
-                  ),
-                )
-              ],
+                          const LoginButton(),
+                          TextButton.icon(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              primary: Theme.of(context).primaryColor,
+                            ),
+                            icon: const Icon(Icons.person),
+                            label: const Text('Criar conta'),
+                          ),
+                        ],
+                      )),
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },
