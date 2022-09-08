@@ -6,7 +6,7 @@ void main() {
   late EmailValidaton sut;
 
   setUp(() {
-    sut = EmailValidaton('any_field');
+    sut = const EmailValidaton('any_field');
   });
 
   test('Should returns null if email is empty', () {
