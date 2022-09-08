@@ -19,14 +19,37 @@ class ValidationComposite implements Validation {
 class FieldValidationSpy extends Mock implements FieldValidation {}
 
 void main() {
-  test('Should return null if all validations returns null or empty', () {
-    final validationNull = FieldValidationSpy();
+  late ValidationComposite sut;
+  late FieldValidationSpy validationNull;
+  late FieldValidationSpy validationEmpty;
+  late FieldValidationSpy validationOtherFields;
+
+  void mockValidationNull(String? error) {
+    when(() => validationNull.validate(any())).thenReturn(error);
+  }
+
+  void mockValidationEmpty(String? error) {
+    when(() => validationNull.validate(any())).thenReturn(error);
+  }
+  
+  void mockValidationOtherFields(String? error) {
+    when(() => validationOtherFields.validate(any())).thenReturn(error);
+  }
+
+  setUp((){
+    validationNull = FieldValidationSpy();
     when(() => validationNull.field).thenReturn('any_field');
-    when(() => validationNull.validate(any())).thenReturn(null);
-    final validationEmpty = FieldValidationSpy();
+    mockValidationNull(null);
+    validationEmpty = FieldValidationSpy();
     when(() => validationEmpty.field).thenReturn('any_field');
-    when(() => validationEmpty.validate(any())).thenReturn('');
-    final sut = ValidationComposite([validationNull, validationEmpty]);
+    validationOtherFields = FieldValidationSpy();
+    when(() => validationOtherFields.field).thenReturn('other_field');
+    mockValidationOtherFields(null);
+    sut = ValidationComposite([validationNull, validationEmpty, validationOtherFields]);
+  });
+
+  test('Should return null if all validations returns null or empty', () {
+    mockValidationEmpty('');
     final error = sut.validate(field: 'any_field', value: 'any_value');
     expect(error, null);
   });
