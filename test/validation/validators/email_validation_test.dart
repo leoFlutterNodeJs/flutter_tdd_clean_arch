@@ -15,19 +15,17 @@ class EmailValidaton implements FieldValidation {
 }
 
 void main() {
-  
+  late EmailValidaton sut;
+
+  setUp(() {
+    sut = EmailValidaton('any_field');
+  });
+
   test('Should returns null if email is empty', () {
-    final sut = EmailValidaton('any_field');
-    final error = sut.validate('');
-
-    expect(error, null);
+    expect(sut.validate(''), null);
   });
 
-    test('Should returns null if email is null', () {
-    final sut = EmailValidaton('any_field');
-    final error = sut.validate(null);
-
-    expect(error, null);
+  test('Should returns null if email is null', () {
+    expect(sut.validate(null), null);
   });
-  
 }
