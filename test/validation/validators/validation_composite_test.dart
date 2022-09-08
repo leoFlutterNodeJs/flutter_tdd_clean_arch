@@ -13,7 +13,7 @@ class ValidationComposite implements Validation {
   @override
   String? validate({required String field, required String value}) {
     String? error;
-    for (final validation in validations) {
+    for (final validation in validations.where((v) => v.field == field)) {
       error = validation.validate(value);
       if(error != null && error.isNotEmpty == true) {
         return error;
@@ -45,12 +45,12 @@ void main() {
 
   setUp((){
     validationNull = FieldValidationSpy();
-    when(() => validationNull.field).thenReturn('any_field');
+    when(() => validationNull.field).thenReturn('other_field');
     mockValidationNull(null);
     validationEmpty = FieldValidationSpy();
     when(() => validationEmpty.field).thenReturn('any_field');
     validationOtherFields = FieldValidationSpy();
-    when(() => validationOtherFields.field).thenReturn('other_field');
+    when(() => validationOtherFields.field).thenReturn('any_field');
     mockValidationOtherFields(null);
     sut = ValidationComposite([validationNull, validationEmpty, validationOtherFields]);
   });
@@ -61,11 +61,12 @@ void main() {
     expect(error, null);
   });
 
-  test('Should return first error if only first validations returns error', () {
+  test('Should return first error', () {
     mockValidationNull('error_null');
     mockValidationEmpty('error_empty');
     mockValidationOtherFields('error_other_fields');
     final error = sut.validate(field: 'any_field', value: 'any_value');
-    expect(error, 'error_null');
+    expect(error, 'error_empty');
   });
+
 }
