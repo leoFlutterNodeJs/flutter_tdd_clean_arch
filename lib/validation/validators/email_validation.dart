@@ -1,10 +1,15 @@
+import 'package:equatable/equatable.dart';
+
 import '../protocols/protocols.dart';
 
-class EmailValidaton implements FieldValidation {
+class EmailValidaton extends Equatable implements FieldValidation {
   @override
   final String field;
 
-  EmailValidaton(this.field);
+  @override
+  List get props => [field];
+
+  const EmailValidaton(this.field);
 
   @override
   String? validate(String? value) {
