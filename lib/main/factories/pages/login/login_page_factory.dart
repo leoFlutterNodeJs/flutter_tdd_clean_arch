@@ -4,4 +4,4 @@ import '../../../../ui/pages/pages.dart';
 
 import '../../factories.dart';
 
-Widget makeLoginPage() => LoginPage(makeLoginPresenter());
+Widget makeLoginPage() => LoginPage(makeGetxLoginPresenter());
