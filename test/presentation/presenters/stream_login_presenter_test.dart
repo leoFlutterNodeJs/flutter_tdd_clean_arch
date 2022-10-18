@@ -149,25 +149,6 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Should call Authentication with correct values', () async {
-    sut.validateEmail(email);
-    sut.validatePassword(password);
-
-    await sut.auth();
-
-    verify(() => authentication
-        .auth(AuthenticationParams(email: email, secret: password))).called(1);
-  });
-
-  test('Should emit correct events on Authentication success', () async {
-    sut.validateEmail(email);
-    sut.validatePassword(password);
-
-    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-
-    await sut.auth();
-  });
-
   test('Should emit correct events on InvalidCredentialsError', () async {
     mockAuthenticationError(DomainError.invalidCredentials);
     sut.validateEmail(email);

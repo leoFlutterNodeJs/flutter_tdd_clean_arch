@@ -9,8 +9,13 @@ import '../protocols/protocols.dart';
 class GetxLoginPresenter extends GetxController implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
 
-  GetxLoginPresenter({required this.validation, required this.authentication});
+  GetxLoginPresenter({
+    required this.validation,
+    required this.authentication,
+    required this.saveCurrentAccount,
+  });
 
   final _emailError = Rxn<String>();
   final _passwordError = Rxn<String>();
@@ -32,7 +37,6 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
-  
   @override
   void validateEmail(String email) {
     _email = email;
@@ -43,15 +47,14 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   @override
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = validation.validate(field: 'password', value: password);
+    _passwordError.value =
+        validation.validate(field: 'password', value: password);
     _validateForm();
   }
 
   void _validateForm() {
     _isFormValid.value = _emailError.value == null &&
-    _passwordError.value == null &&
-    _email != null &&
-    _password != null;
+        _passwordError.value == null;
   }
 
   @override
@@ -59,7 +62,8 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     _isLoading.value = true;
     _validateForm();
     try {
-      await authentication.auth(AuthenticationParams(email: _email!, secret: _password!));
+      final account = await authentication.auth(AuthenticationParams(email: _email!, secret: _password!));
+      await saveCurrentAccount.save(account);
     } on DomainError catch (error) {
       _mainError.value = error.description;
     }
