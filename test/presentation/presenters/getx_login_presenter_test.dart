@@ -73,13 +73,20 @@ void main() {
     mockAuthentication();
   });
 
-  test('Should call Validation with correct email', () {
+  test('Should call Validation with correct email', () async {
     sut.validateEmail(email);
 
     verify(() => validation.validate(field: 'email', value: email)).called(1);
   });
 
-  test('Should email error if validate fails', () {
+  test('Should change page on success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
+    await sut.auth();
+  });
+
+  test('Should email error if validate fails', () async {
     mockValidation(value: 'error');
 
     sut.emailErrorStream
@@ -91,14 +98,14 @@ void main() {
     sut.validateEmail(email);
   });
 
-  test('Should call Validation with correct password', () {
+  test('Should call Validation with correct password', () async {
     sut.validatePassword(password);
 
     verify(() => validation.validate(field: 'password', value: password))
         .called(1);
   });
 
-  test('Should password error if validate fails', () {
+  test('Should password error if validate fails', () async {
     mockValidation(value: 'error');
 
     sut.passwordErrorStream
@@ -110,7 +117,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Should emits email error if email is invalid', () {
+  test('Should emits email error if email is invalid', () async {
     mockValidation(field: 'email', value: 'error');
 
     sut.emailErrorStream
